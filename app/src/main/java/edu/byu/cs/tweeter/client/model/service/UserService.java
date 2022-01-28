@@ -12,6 +12,7 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.RegisterTask;
+import edu.byu.cs.tweeter.client.presenter.FollowersPresenter;
 import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -36,7 +37,14 @@ public class UserService {
     }
 
     //GETUSERTASK
+    //Following
     public void getUser(AuthToken currUserAuthToken, String userAlias, FollowingPresenter.GetUserObserver getUserObserver) {
+        GetUserTask getUserTask = new GetUserTask(currUserAuthToken, userAlias, new GetUserHandler(getUserObserver));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(getUserTask);
+    }
+    //Followers
+    public void getUser(AuthToken currUserAuthToken, String userAlias, FollowersPresenter.GetUserObserver getUserObserver) {
         GetUserTask getUserTask = new GetUserTask(currUserAuthToken, userAlias, new GetUserHandler(getUserObserver));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
