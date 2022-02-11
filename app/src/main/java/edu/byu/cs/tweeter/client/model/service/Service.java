@@ -64,14 +64,9 @@ public abstract class Service {
         protected T returnObject;
         protected GetObjectObserver<T> getObjectObserver;
 
-        public GetObjectHandler(ServiceObserver observer) {
+        public GetObjectHandler(GetObjectObserver<T> observer) {
             super(observer);
-            try {
-                getObjectObserver = (GetObjectObserver<T>) observer;
-            }
-            catch (Exception e){
-                observer.handleException(e);
-            }
+            this.getObjectObserver = observer;
         }
         @Override
         protected void handlerHandleSuccess(Message msg) {
@@ -90,14 +85,9 @@ public abstract class Service {
         private Pair<List<T>, Boolean> pageOfObjects;
         private GetPagesObserver<T> getPagesObserver;
 
-        public GetPagesHandler(ServiceObserver observer) {
+        public GetPagesHandler(GetPagesObserver<T> observer) {
             super(observer);
-            try {
-                getPagesObserver = (GetPagesObserver<T>) observer;
-            }
-            catch (Exception e){
-                observer.handleException(e);
-            }
+            this.getPagesObserver = observer;
         }
         @Override
         protected void handlerHandleSuccess(Message msg) {
@@ -115,14 +105,9 @@ public abstract class Service {
     public abstract class SetObjectHandler extends ServiceHandler {
         private SetObjectObserver setObjectObserver;
 
-        public SetObjectHandler(ServiceObserver observer) {
+        public SetObjectHandler(SetObjectObserver observer) {
             super(observer);
-            try {
-                setObjectObserver = (SetObjectObserver) observer;
-            }
-            catch (Exception e){
-                observer.handleException(e);
-            }
+            this.setObjectObserver = observer;
         }
         @Override
         protected void handlerHandleSuccess(Message msg) {

@@ -36,7 +36,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Following" tab.
  */
-public class FollowingFragment extends Fragment implements FollowingPresenter.View{
+public class FollowingFragment extends Fragment implements FollowingPresenter.FollowingView{
 
     private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
@@ -106,7 +106,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     }
 
     @Override
-    public void addFollowees(List<User> followees) {
+    public void addObjects(List<User> followees) {
         followingRecyclerViewAdapter.addItems(followees);
     }
 
@@ -141,7 +141,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    presenter.getUserData(userAlias.getText().toString());
+                    presenter.getUser(userAlias.getText().toString()); //Selects the user after retrieving it
                     Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
                 }
             });

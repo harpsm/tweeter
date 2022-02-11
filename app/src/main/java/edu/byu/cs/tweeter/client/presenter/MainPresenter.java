@@ -73,7 +73,7 @@ public class MainPresenter {
 
         @Override
         public void handleSuccess(Boolean isFollower) {
-            view.updateFollowButton(isFollower.booleanValue());
+            view.updateFollowButton(isFollower);
         }
 
         @Override
