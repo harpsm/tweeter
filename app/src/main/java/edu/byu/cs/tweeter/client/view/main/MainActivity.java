@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         });
     }
 
-    public class MainPresenterView implements MainPresenter.View {
+    public class MainPresenterView implements MainPresenter.MainView {
 
         @Override
         public void updateFollowButton(Boolean isFollower) {
