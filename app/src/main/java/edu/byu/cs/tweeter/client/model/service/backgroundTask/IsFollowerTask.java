@@ -15,7 +15,10 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class IsFollowerTask extends AuthorizedTask {
 
-    public static final String IS_FOLLOWER_KEY = "is-follower";
+    //IsFollowerTask is not a "GetTask" (beacuse it takes 2 input objects)
+    // but it's observer acts as a "GetObjectObserver" and so it
+    //must have it's return key be equal to GetTask.RETURN_OBJECT_KEY
+    public static final String IS_FOLLOWER_KEY = GetTask.RETURN_OBJECT_KEY;
 
     /**
      * The alleged follower.

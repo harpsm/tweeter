@@ -10,9 +10,6 @@ import edu.byu.cs.tweeter.model.domain.User;
  * Background task that returns the profile for a specified user.
  */
 public class GetUserTask extends GetTask<String, User> {
-
-    public static final String USER_KEY = "user";
-
     public GetUserTask(AuthToken authToken, String alias, Handler messageHandler) {
         super(alias, authToken, messageHandler);
         setLogTag("GetUserTask");
@@ -21,11 +18,6 @@ public class GetUserTask extends GetTask<String, User> {
     @Override
     protected void talkToServer() {
         setReturnObject(getUser());
-    }
-
-    @Override
-    protected void addBundleData(Bundle msgBundle) {
-        msgBundle.putSerializable(USER_KEY, getReturnObject());
     }
 
     private User getUser() {

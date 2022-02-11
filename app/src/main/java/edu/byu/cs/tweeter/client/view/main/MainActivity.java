@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     public class MainPresenterView implements MainPresenter.View {
 
         @Override
-        public void updateFollowButton(boolean isFollower) {
+        public void updateFollowButton(Boolean isFollower) {
             // If logged in user if a follower of the selected user, display the follow button as "following"
             if (isFollower) {
                 followButton.setText(R.string.following);

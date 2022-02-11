@@ -33,7 +33,7 @@ public class MainPresenter {
     private static final String LOG_TAG = "MainActivity";
 
     public interface View {
-        void updateFollowButton(boolean isFollower);
+        void updateFollowButton(Boolean isFollower);
         void displayMessage(String message);
         void unfollowedUser();
         void enableFollowButton();
@@ -72,8 +72,8 @@ public class MainPresenter {
     public class IsFollowerObserver implements FollowService.IsFollowerObserver {
 
         @Override
-        public void handleSuccess(boolean isFollower) {
-            view.updateFollowButton(isFollower);
+        public void handleSuccess(Boolean isFollower) {
+            view.updateFollowButton(isFollower.booleanValue());
         }
 
         @Override
@@ -265,7 +265,7 @@ public class MainPresenter {
     public class GetFollowersCountObserver implements FollowService.GetFollowersCountObserver{
 
         @Override
-        public void handleSuccess(int followersCount) {
+        public void handleSuccess(Integer followersCount) {
             view.updateFollowerCount(followersCount);
         }
 
@@ -282,7 +282,7 @@ public class MainPresenter {
     public class GetFollowingCountObserver implements FollowService.GetFollowingCountObserver{
 
         @Override
-        public void handleSuccess(int followingCount) {
+        public void handleSuccess(Integer followingCount) {
             view.updateFollowingCount(followingCount);
         }
 

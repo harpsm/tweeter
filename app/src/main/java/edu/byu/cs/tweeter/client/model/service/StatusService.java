@@ -23,120 +23,43 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StatusService {
+public class StatusService extends Service {
 
-    public interface GetFeedObserver {
-        void handleSuccess(List<Status> statuses, boolean hasMorePages);
-        void handleFailure(String message);
-        void handleException(Exception exception);
-    }
-    public interface GetStoryObserver {
-        void handleSuccess(List<Status> statuses, boolean hasMorePages);
-        void handleFailure(String message);
-        void handleException(Exception exception);
-    }
-    public interface PostStatusObserver {
-        void handleSuccess();
-        void handleFailure(String message);
-        void handleException(Exception exception);
-    }
+    public interface GetFeedObserver extends GetPagesObserver<Status> {}
+    public interface GetStoryObserver extends GetPagesObserver<Status> {}
+    public interface PostStatusObserver extends SetObjectObserver {}
 
+    //GETFEEDTASK
     public void getFeed(AuthToken currUserAuthToken, User user, int pageSize, Status lastStatus, FeedPresenter.GetFeedObserver getFeedObserver) {
         GetFeedTask getFeedTask = new GetFeedTask(currUserAuthToken, user, pageSize, lastStatus, new GetFeedHandler(getFeedObserver));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getFeedTask);
+        executeTask(getFeedTask);
     }
-
-    /**
-     * Message handler (i.e., observer) for GetFeedTask.
-     */
-    private class GetFeedHandler extends Handler {
-
-        private GetFeedObserver observer;
-
+    //GetFeedHandler
+    private class GetFeedHandler extends GetPagesHandler<Status> {
         public GetFeedHandler(GetFeedObserver observer) {
-            this.observer = observer;
-        }
-
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
-            if (success) {
-                List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.OBJECT_LIST_KEY);
-                boolean hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
-                observer.handleSuccess(statuses, hasMorePages);
-            } else if (msg.getData().containsKey(GetFeedTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(GetFeedTask.MESSAGE_KEY);
-                observer.handleFailure(message);
-            } else if (msg.getData().containsKey(GetFeedTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(GetFeedTask.EXCEPTION_KEY);
-                observer.handleException(ex);
-            }
+            super(observer);
         }
     }
-
 
     //STORYTASK
     public void getStory(AuthToken currUserAuthToken, User user, int pageSize, Status lastStatus, StoryPresenter.GetStoryObserver getStoryObserver) {
         GetStoryTask getStoryTask = new GetStoryTask(currUserAuthToken, user, pageSize, lastStatus, new GetStoryHandler(getStoryObserver));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getStoryTask);
+        executeTask(getStoryTask);
     }
-    /**
-     * Message handler (i.e., observer) for GetStoryTask.
-     */
-    private class GetStoryHandler extends Handler {
-
-        private GetStoryObserver observer;
-
-        public GetStoryHandler(GetStoryObserver observer) {
-            this.observer = observer;
-        }
-
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(GetStoryTask.SUCCESS_KEY);
-            if (success) {
-                List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetStoryTask.OBJECT_LIST_KEY);
-                boolean hasMorePages = msg.getData().getBoolean(GetStoryTask.MORE_PAGES_KEY);
-                observer.handleSuccess(statuses, hasMorePages);
-            } else if (msg.getData().containsKey(GetStoryTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(GetStoryTask.MESSAGE_KEY);
-                observer.handleFailure(message);
-            } else if (msg.getData().containsKey(GetStoryTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(GetStoryTask.EXCEPTION_KEY);
-                observer.handleException(ex);
-            }
-        }
+    //GetStoryHandler
+    private class GetStoryHandler extends GetPagesHandler<Status> {
+        public GetStoryHandler(GetStoryObserver observer) { super(observer); }
     }
 
     //POSTSTATUSTASK
     public void postStatus(AuthToken currUserAuthToken, Status newStatus, MainPresenter.PostStatusObserver postStatusObserver) {
         PostStatusTask statusTask = new PostStatusTask(currUserAuthToken, newStatus, new PostStatusHandler(postStatusObserver));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(statusTask);
+        executeTask(statusTask);
     }
     // PostStatusHandler
-    private class PostStatusHandler extends Handler {
-
-        private PostStatusObserver observer;
-
+    private class PostStatusHandler extends SetObjectHandler {
         public PostStatusHandler(PostStatusObserver observer) {
-            this.observer = observer;
-        }
-
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(PostStatusTask.SUCCESS_KEY);
-            if (success) {
-                observer.handleSuccess();
-            } else if (msg.getData().containsKey(PostStatusTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(PostStatusTask.MESSAGE_KEY);
-                observer.handleFailure(message);
-            } else if (msg.getData().containsKey(PostStatusTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(PostStatusTask.EXCEPTION_KEY);
-                observer.handleException(ex);
-            }
+            super(observer);
         }
     }
 }

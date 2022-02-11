@@ -10,9 +10,6 @@ import edu.byu.cs.tweeter.model.domain.User;
  * Background task that queries how many other users a specified user is following.
  */
 public class GetFollowingCountTask extends GetTask<User, Integer> {
-
-    public static final String COUNT_KEY = "count";
-
     public GetFollowingCountTask(AuthToken authToken, User targetUser, Handler messageHandler) {
         super(targetUser, authToken, messageHandler);
         setLogTag("GetFollowingCountTask");
@@ -21,10 +18,5 @@ public class GetFollowingCountTask extends GetTask<User, Integer> {
     @Override
     protected void talkToServer() {
         setReturnObject(new Integer(20));
-    }
-
-    @Override
-    protected void addBundleData(Bundle msgBundle) {
-        msgBundle.putInt(COUNT_KEY, getReturnObject());
     }
 }
