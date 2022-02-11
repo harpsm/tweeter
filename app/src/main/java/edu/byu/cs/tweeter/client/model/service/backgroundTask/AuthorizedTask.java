@@ -18,4 +18,7 @@ public abstract class AuthorizedTask extends Task {
         this.authToken = authToken;
     }
 
+    public AuthToken getAuthToken() {
+        return authToken;
+    }
 }
