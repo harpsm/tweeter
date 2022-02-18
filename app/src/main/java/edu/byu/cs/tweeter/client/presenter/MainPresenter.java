@@ -19,14 +19,14 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter extends Presenter {
 
-    private static final String LOG_TAG = "MainActivity";
-    private static final String IS_FOLLOWER_DESCRIPTION = "determine follow relationship";
-    private static final String FOLLOW_DESCRIPTION = "follow";
-    private static final String UNFOLLOW_DESCRIPTION = "unfollow";
-    private static final String GET_FOLLOWING_COUNT_DESCRIPTION = "get following count";
-    private static final String GET_FOLLOWERS_COUNT_DESCRIPTION = "get followers count";
-    private static final String POST_STATUS_DESCRIPTION = "post";
-    private static final String LOGOUT_DESCRIPTION = "logout";
+    public static final String LOG_TAG = "MainActivity";
+    public static final String IS_FOLLOWER_DESCRIPTION = "determine follow relationship";
+    public static final String FOLLOW_DESCRIPTION = "follow";
+    public static final String UNFOLLOW_DESCRIPTION = "unfollow";
+    public static final String GET_FOLLOWING_COUNT_DESCRIPTION = "get following count";
+    public static final String GET_FOLLOWERS_COUNT_DESCRIPTION = "get followers count";
+    public static final String POST_STATUS_DESCRIPTION = "post";
+    public static final String LOGOUT_DESCRIPTION = "logout";
 
     //Interfaces and Observer Abstract Classes
     public interface MainView extends View {
@@ -48,6 +48,7 @@ public class MainPresenter extends Presenter {
             mainView.displayMessage("Failed to " + taskDescription + ": " + message);
         }
         public void handleException(Exception exception) {
+            //Log.e(LOG_TAG, ex.getMessage(), ex);
             mainView.displayMessage("Failed to " + taskDescription + " because of exception: " + exception.getMessage());
         }
     }
@@ -85,6 +86,7 @@ public class MainPresenter extends Presenter {
         }
         @Override
         public void handleException(Exception exception) {
+            //Log.e(LOG_TAG, exception.getMessage(), exception);
             mainView.enableFollowButton();
             mainView.displayMessage("Failed to " + taskDescription + " because of exception: " + exception.getMessage());
         }
@@ -155,6 +157,8 @@ public class MainPresenter extends Presenter {
 
     //LOGOUT
     public void logout() {
+        view.displayMessage("Logging Out...");
+
         Cache.getInstance().getUserService()
                 .logout(Cache.getInstance().getCurrUserAuthToken(), new LogoutObserver(LOGOUT_DESCRIPTION));
     }
@@ -178,8 +182,9 @@ public class MainPresenter extends Presenter {
                     .postStatus(Cache.getInstance().getCurrUserAuthToken(), newStatus, new PostStatusObserver(POST_STATUS_DESCRIPTION));
         }
         catch (Exception ex) {
-            Log.e(LOG_TAG, ex.getMessage(), ex);
-            mainView.displayMessage("Failed to post the status because of exception: " + ex.getMessage());
+            //Log.e(LOG_TAG, ex.getMessage(), ex);
+            PostStatusObserver observer = new PostStatusObserver(POST_STATUS_DESCRIPTION);
+            observer.handleException(ex);
         }
     }
     public class PostStatusObserver extends NoReturnObserver implements StatusService.PostStatusObserver {
